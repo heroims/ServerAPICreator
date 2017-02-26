@@ -13,6 +13,7 @@
 		845E7EC31E5AF2CC00102E11 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 845E7EC11E5AF2CC00102E11 /* Main.storyboard */; };
 		845E7ECE1E5AF2CC00102E11 /* ServerAPICreatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845E7ECD1E5AF2CC00102E11 /* ServerAPICreatorTests.swift */; };
 		845E7ED91E5AF2CC00102E11 /* ServerAPICreatorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845E7ED81E5AF2CC00102E11 /* ServerAPICreatorUITests.swift */; };
+		D826FFDB1E5F358300BB2C2C /* ServerAPIInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D826FFDA1E5F358300BB2C2C /* ServerAPIInfo.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +46,7 @@
 		845E7ED41E5AF2CC00102E11 /* ServerAPICreatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ServerAPICreatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		845E7ED81E5AF2CC00102E11 /* ServerAPICreatorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerAPICreatorUITests.swift; sourceTree = "<group>"; };
 		845E7EDA1E5AF2CC00102E11 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D826FFDA1E5F358300BB2C2C /* ServerAPIInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerAPIInfo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +99,7 @@
 			children = (
 				845E7EBB1E5AF2CB00102E11 /* AppDelegate.swift */,
 				845E7EBD1E5AF2CB00102E11 /* ViewController.swift */,
+				D826FFDA1E5F358300BB2C2C /* ServerAPIInfo.swift */,
 				845E7EBF1E5AF2CB00102E11 /* Assets.xcassets */,
 				845E7EC11E5AF2CC00102E11 /* Main.storyboard */,
 				845E7EC41E5AF2CC00102E11 /* Info.plist */,
@@ -259,6 +262,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				845E7EBE1E5AF2CB00102E11 /* ViewController.swift in Sources */,
+				D826FFDB1E5F358300BB2C2C /* ServerAPIInfo.swift in Sources */,
 				845E7EBC1E5AF2CB00102E11 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -505,6 +509,7 @@
 				845E7EDF1E5AF2CC00102E11 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		845E7EE01E5AF2CC00102E11 /* Build configuration list for PBXNativeTarget "ServerAPICreatorTests" */ = {
 			isa = XCConfigurationList;
@@ -513,6 +518,7 @@
 				845E7EE21E5AF2CC00102E11 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		845E7EE31E5AF2CC00102E11 /* Build configuration list for PBXNativeTarget "ServerAPICreatorUITests" */ = {
 			isa = XCConfigurationList;
@@ -521,6 +527,7 @@
 				845E7EE51E5AF2CC00102E11 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

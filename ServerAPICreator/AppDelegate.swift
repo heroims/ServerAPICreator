@@ -17,6 +17,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Insert code here to initialize your application
     }
 
+    @IBAction func showWindowsClick(_ sender: Any) {
+        
+    }
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
     }
