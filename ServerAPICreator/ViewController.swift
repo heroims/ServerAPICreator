@@ -8,9 +8,11 @@
 
 import Cocoa
 
-class ViewController: NSViewController ,NSTextFieldDelegate,NSTableViewDataSource{
+class ViewController: NSViewController ,NSTextFieldDelegate,NSTableViewDataSource,NSTableViewDelegate{
 
     var data:[ServerAPIInfo] = Array();
+
+    var parameterdata:[APIParameterInfo] = Array();
     
     @IBOutlet weak var txtRetrytimes: NSTextField!
     @IBOutlet weak var txtTimeout: NSTextField!
@@ -22,7 +24,13 @@ class ViewController: NSViewController ,NSTextFieldDelegate,NSTableViewDataSourc
     @IBOutlet weak var txtAction: NSTextField!
     @IBOutlet weak var table: NSTableView!
     @IBOutlet weak var btnS1: NSButton!
+    @IBOutlet weak var parameterTable: NSTableView!
     @IBOutlet weak var btnS2: NSButton!
+    @IBOutlet weak var txtParameter: NSTextField!
+    @IBOutlet weak var btnRequire: NSButton!
+    @IBOutlet weak var txtDefault: NSTextField!
+    @IBOutlet weak var txtDiscrib: NSTextField!
+    @IBOutlet weak var txtError: NSTextField!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,14 +47,30 @@ class ViewController: NSViewController ,NSTextFieldDelegate,NSTableViewDataSourc
         serverApi.apiName=txtAPIName.stringValue
         serverApi.apiS1 = btnS1.state==NSOnState
         serverApi.apiS2 = btnS2.state==NSOnState
-        serverApi.apiRetryTimes=txtRetrytimes.stringValue;
+        serverApi.apiRetryTimes=txtRetrytimes.stringValue
         serverApi.apiTimeOut=txtTimeout.stringValue
         serverApi.apiAction=txtAction.stringValue
-
+        serverApi.apiParamters=parameterdata
+        serverApi.apiError=txtError.stringValue
         data.append(serverApi)
 
+        parameterdata.removeAll()
         table.reloadData()
+        parameterTable.reloadData()
+        
+        txtAction.stringValue=""
+        txtTimeout.stringValue=""
+        txtRetrytimes.stringValue=""
+        btnS2.state=NSOffState
+        btnS1.state=NSOnState
+        txtAPIName.stringValue=""
+        cobBaseAPI.stringValue="api"
+        txtReturnClass.stringValue=""
+        cobAPIAccess.stringValue=""
+        txtAPIPath.stringValue=""
+        txtError.stringValue=""
         print("添加")
+
     }
     @IBAction func btnDeleteClick(_ sender: Any) {
         if data.count<table.selectedRow || table.selectedRow<0 {
@@ -54,8 +78,29 @@ class ViewController: NSViewController ,NSTextFieldDelegate,NSTableViewDataSourc
         }
         data.remove(at: table.selectedRow)
         table.reloadData()
+        parameterTable.reloadData()
         print("删除")
 
+    }
+    @IBAction func btnAddParameterClick(_ sender: Any) {
+        let apiParameter = APIParameterInfo()
+        apiParameter.parameterName = txtParameter.stringValue
+        apiParameter.parameterRequired = btnRequire.state==NSOnState
+        apiParameter.parameterExtra = txtDiscrib.stringValue
+        apiParameter.parameterDefault = txtDefault.stringValue
+        parameterdata.append(apiParameter)
+        parameterTable.reloadData()
+        txtParameter.stringValue=""
+        btnRequire.state=NSOffState
+        txtDiscrib.stringValue=""
+        txtDefault.stringValue=""
+    }
+    @IBAction func btnDelParameterClick(_ sender: Any) {
+        if parameterdata.count<parameterTable.selectedRow || parameterTable.selectedRow<0 {
+            return
+        }
+        parameterdata.remove(at: parameterTable.selectedRow)
+        parameterTable.reloadData()
     }
     @IBAction func btnCreateClick(_ sender: Any) {
         
@@ -201,14 +246,46 @@ class ViewController: NSViewController ,NSTextFieldDelegate,NSTableViewDataSourc
                 
                 wikiString=wikiString.appendingFormat("###%@", serverApi.apiAction)
                 wikiString+="\n"
-                wikiString=wikiString.appendingFormat("* %@: `%@`", serverApi.apiAccess.uppercased(),serverApi.apiPath)
+                var tmpApiAccess = serverApi.apiAccess.uppercased()
+                if tmpApiAccess.isEmpty {
+                    if serverApi.apiHostType=="api" {
+                        tmpApiAccess="Get"
+                    }
+                    if serverApi.apiHostType=="shopapi" {
+                        tmpApiAccess="PostJson"
+                    }
+                }
+                
+                wikiString=wikiString.appendingFormat("* %@: `%@`", tmpApiAccess,serverApi.apiPath)
                 wikiString+="\n"
                 wikiString+="* 参数："
                 wikiString+="\n"
                 wikiString+="\n"
                 wikiString+="\n     | name | required | default | extra |"
                 wikiString+="\n     | ----- | ----- | ----- | ----- |"
-                wikiString+="\n* ERROR: ``"
+                for parameter in serverApi.apiParamters {
+                    wikiString=wikiString.appendingFormat("\n     | %@ | %@ | %@ | %@ |", parameter.parameterName,(parameter.parameterRequired ? "Y" : "N"),parameter.parameterDefault,parameter.parameterExtra)
+                }
+                var errorArr = Array<String>()
+                if serverApi.apiError.contains(",") {
+                    errorArr=serverApi.apiError.components(separatedBy: ",")
+                }
+                if serverApi.apiError.contains("，") {
+                    errorArr=serverApi.apiError.components(separatedBy: "，")
+                }
+                wikiString+="\n* ERROR: "
+                for errorString in errorArr {
+                    if !errorString.contains("`") {
+                        wikiString=wikiString.appendingFormat("`%@`,", errorString)
+                    }
+                    else{
+                        wikiString=wikiString.appendingFormat("%@,", errorString)
+                    }
+                }
+                if wikiString.hasSuffix(",") {
+                    wikiString.remove(at: wikiString.index(before: wikiString.endIndex))
+                }
+                
                 wikiString+="\n"
                 wikiString=wikiString.appendingFormat("* RETURN: %@", serverApi.apiReturnClass)
                 wikiString+="\n"
@@ -261,12 +338,39 @@ class ViewController: NSViewController ,NSTextFieldDelegate,NSTableViewDataSourc
     }
 
     func numberOfRows(in tableView: NSTableView) -> Int {
-        return data.count
+        if tableView==table {
+            return data.count
+        }
+        if tableView==parameterTable {
+            return parameterdata.count
+        }
+        return 0
     }
     func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
-        return data[row]
-    }
+        if tableView==table {
+            return data[row]
+        }
+        if tableView==parameterTable {
+            return parameterdata[row]
+        }
 
+        return nil
+    }
+    func tableViewSelectionDidChange(_ notification: Notification) {
+        let control = notification.object as! NSTableView
+
+        if control.selectedRow>=0 {
+            if control == table {
+                parameterdata = data[control.selectedRow].apiParamters
+                parameterTable.reloadData()
+            }
+            else if control == parameterTable {
+                
+            }
+        }
+    }
+    
+    
     override var representedObject: Any? {
         didSet {
         // Update the view, if already loaded.

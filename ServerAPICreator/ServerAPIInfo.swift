@@ -19,11 +19,12 @@ class ServerAPIInfo: NSObject {
     var apiRetryTimes = ""
     var apiTimeOut = ""
     var apiAction = ""
-    var apiParamters = Array<Any>()
+    var apiParamters = Array<APIParameterInfo>()
+    var apiError = ""
     
 }
 
-class APIParameters: NSObject {
+class APIParameterInfo: NSObject {
     var parameterName = ""
     var parameterRequired = false
     var parameterDefault = ""
