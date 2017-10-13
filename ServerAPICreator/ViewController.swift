@@ -169,7 +169,7 @@ class ViewController: NSViewController ,NSTextFieldDelegate,NSTableViewDataSourc
                 mString+="\n"
                 mString+="-(NSString*)requestPath{"
                 mString+="\n"
-                mString=mString.appendingFormat("   return %@;", serverApi.apiPath)
+                mString=mString.appendingFormat("   return @\"%@\";", serverApi.apiPath)
                 mString+="\n"
                 mString+="}"
                 mString+="\n"
